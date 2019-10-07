@@ -1,5 +1,11 @@
 import { Color, getA, getB, getG, getR } from '../shared'
 
+/**
+ * Generate rgba(r,g,b,a) style string.
+ *
+ * @param v- color to convert
+ * @returns rgba formatted string
+ */
 export const toRgbaString = (v: Color): string => {
   const r = getR(v).toString(10)
   const g = getG(v).toString(10)
@@ -9,6 +15,13 @@ export const toRgbaString = (v: Color): string => {
   return `rgba(${r},${g},${b},${a})`
 }
 
+/**
+ * Generate rgb(r,g,b) style string.
+ * Alpha channel will be ignored.
+ *
+ * @param v - color to convert
+ * @returns rgb formatted string
+ */
 export const toRgbString = (v: Color): string => {
   const r = getR(v).toString(10)
   const g = getG(v).toString(10)
@@ -22,8 +35,8 @@ const pad = (str: string) => ('00' + str).slice(-2)
 /**
  * Generate #rrggbbaa style string.
  *
- * @param v - color to stringify
- * @returns hexa string
+ * @param v - color to convert
+ * @returns hexa formatted string
  */
 export const toHexaString = (v: Color): string => {
   const r = getR(v).toString(16)
@@ -38,8 +51,8 @@ export const toHexaString = (v: Color): string => {
  * Generate #rrggbb style string.
  * Alpha channel will be ignored.
  *
- * @param v - color to stringify
- * @returns hex string
+ * @param v - color to convert
+ * @returns hex formatted string
  */
 export const toHexString = (v: Color): string => {
   const r = getR(v).toString(16)
