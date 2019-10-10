@@ -61,3 +61,59 @@ export const toHexString = (v: Color): string => {
 
   return `#${pad(r)}${pad(g)}${pad(b)}`
 }
+
+export interface HSLA {
+  /**
+   * Hue
+   */
+  h: number
+
+  /**
+   * Saturation
+   */
+  s: number
+
+  /**
+   * Lightness
+   */
+  l: number
+
+  /**
+   * Alpha
+   */
+  a: number
+}
+
+/**
+ * Generate HSLA object.
+ *
+ * @param color - color to convert
+ * @returns HLSA object
+ */
+export const toHslaObject = (color: Color): HSLA => {
+  const r = getR(color) / 255
+  const g = getG(color) / 255
+  const b = getB(color) / 255
+
+  // Convertion formula
+  // https://en.wikipedia.org/wiki/HSL_and_HSV#Formal_derivation
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const c = max - min
+
+  const h =
+    60 *
+    (c === 0
+      ? 0
+      : max === r
+      ? ((g - b) / c) % 6
+      : max === g
+      ? (b - r) / c + 2
+      : (r - g) / c + 4)
+
+  const l = 0.5 * (max + min)
+
+  const s = l === 1 || l === 0 ? 0 : c / (1 - Math.abs(2 * l - 1))
+
+  return { h, s, l, a: getA(color) / 255 }
+}

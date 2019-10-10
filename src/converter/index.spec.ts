@@ -1,5 +1,11 @@
-import { toHexString, toHexaString, toRgbString, toRgbaString } from '.'
-import { fromRgba } from '../'
+import {
+  toHexString,
+  toHexaString,
+  toHslaObject,
+  toRgbString,
+  toRgbaString
+} from '.'
+import { fromRgba, fromHexString } from '../'
 
 describe('#toRgbaString', () => {
   it('Should convert to rgba(r,g,b,a)', () => {
@@ -24,5 +30,28 @@ describe('#toHexaString', () => {
 describe('#toHexString', () => {
   it('Should convert to #rrggbb', () => {
     expect(toHexString(fromRgba(11, 255, 0, 0))).toEqual('#0bff00')
+  })
+})
+
+describe('#toHslaObject', () => {
+  it('Should convert RGB to HSL', () => {
+    expect(toHslaObject(fromHexString('#000'))).toEqual({
+      h: 0,
+      s: 0,
+      l: 0,
+      a: 1
+    })
+
+    expect(toHslaObject(fromHexString('#fff'))).toEqual({
+      h: 0,
+      s: 0,
+      l: 1,
+      a: 1
+    })
+
+    const lightblue = toHslaObject(fromHexString('#80FFFF'))
+    expect(lightblue.h).toEqual(180)
+    expect(lightblue.s).toEqual(1)
+    expect(lightblue.l).toBeCloseTo(0.75)
   })
 })
