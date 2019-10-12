@@ -1,4 +1,5 @@
-import { fromHexString, fromHexaString, fromRgb, fromRgba } from '.'
+import { fromHexString, fromHexaString, fromHsla, fromRgb, fromRgba } from '.'
+import { toHexString } from '../'
 import { getA, getB, getG, getR } from '../shared'
 
 describe('#fromRgba', () => {
@@ -20,6 +21,14 @@ describe('#fromRgb', () => {
     expect(getG(color)).toEqual(222)
     expect(getB(color)).toEqual(0)
     expect(getA(color)).toEqual(255)
+  })
+})
+
+describe('#fromHsla', () => {
+  it('Should construct u32 from each values', () => {
+    expect(toHexString(fromHsla(0, 0, 0, 1))).toEqual('#000000')
+    expect(toHexString(fromHsla(0, 0, 1, 1))).toEqual('#ffffff')
+    expect(toHexString(fromHsla(180, 1, 0.75, 1))).toEqual('#80ffff')
   })
 })
 

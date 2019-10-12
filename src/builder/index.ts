@@ -14,6 +14,28 @@ export const fromRgb = (r: number, g: number, b: number): Color =>
   fromRgba(r, g, b, 1.0)
 
 /**
+ * Build color from HSL(A).
+ * https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
+ */
+export const fromHsla = (
+  h: number,
+  s: number,
+  l: number,
+  a: number = 1.0
+): Color => {
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12
+    const b = s * Math.min(l, 1 - l)
+
+    return Math.round((l - b * Math.max(Math.min(k - 3, 9 - k, 1), -1)) * 255)
+  }
+
+  return (
+    (f(0) << R_OFFSET) | (f(8) << G_OFFSET) | (f(4) << B_OFFSET) | (a * 255)
+  )
+}
+
+/**
  * Build color bits from hexa color notation.
  * e.g. #ffff, #f0f0f0ff
  */
