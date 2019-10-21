@@ -1,4 +1,4 @@
-import { setAlpha, blend, darken, lighten } from '.'
+import { setAlpha, blend, darken, lighten, rotate } from '.'
 import { fromRgba, fromHexString, toRgbaString, toHexString } from '../'
 
 describe('#setAlpha', () => {
@@ -87,5 +87,13 @@ describe('#darken', () => {
     expect(toHexString(darken(fromHexString('#fff'), 0))).toEqual('#ffffff')
     expect(toHexString(darken(fromHexString('#f00'), 0))).toEqual('#ff0000')
     expect(toHexString(darken(fromHexString('#33a'), 0))).toEqual('#3333aa')
+  })
+})
+
+describe('#rotate', () => {
+  it('Should rotate the input value', () => {
+    expect(toHexString(rotate(fromHexString('#f00'), 120))).toEqual('#00ff00')
+    expect(toHexString(rotate(fromHexString('#0f0'), -120))).toEqual('#ff0000')
+    expect(toHexString(rotate(fromHexString('#faa'), -120))).toEqual('#aaaaff')
   })
 })

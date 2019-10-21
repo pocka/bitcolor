@@ -89,3 +89,21 @@ export const darken = (color: Color, amount: number): Color => {
 
   return fromHsla(hlsa.h, hlsa.s, newL, hlsa.a)
 }
+
+/**
+ * Rotate hue value of the input.
+ *
+ * @param color - the color to rotate hue
+ * @param degree - degree to add to the color's hue between -360~360
+ * @returns the rotated color
+ */
+export const rotate = (color: Color, degree: number): Color => {
+  const hlsa = toHslaObject(color)
+
+  const newH = Math.max(
+    Math.min(((hlsa.h + degree < 0 ? 360 : 0) + hlsa.h + degree) % 360, 360),
+    -360
+  )
+
+  return fromHsla(newH, hlsa.s, hlsa.l, hlsa.a)
+}
