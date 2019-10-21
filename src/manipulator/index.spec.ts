@@ -1,4 +1,4 @@
-import { setAlpha, blend } from '.'
+import { setAlpha, blend, darken, lighten } from '.'
 import { fromRgba, fromHexString, toRgbaString, toHexString } from '../'
 
 describe('#setAlpha', () => {
@@ -37,5 +37,55 @@ describe('#blend', () => {
     expect(toHexString(blend(color1, color2, -100))).toEqual(
       toHexString(color2)
     )
+  })
+})
+
+describe('#lighten', () => {
+  it('Should lighten a input', () => {
+    const gray = '#808080'
+
+    expect(toHexString(lighten(fromHexString('#000'), 0.5))).toEqual(gray)
+    expect(toHexString(lighten(fromHexString(gray), 0.5))).toEqual('#c0c0c0')
+  })
+
+  it('Should return white when amount is 1.0', () => {
+    const white = '#ffffff'
+
+    expect(toHexString(lighten(fromHexString('#000'), 1))).toEqual(white)
+    expect(toHexString(lighten(fromHexString('#fff'), 1))).toEqual(white)
+    expect(toHexString(lighten(fromHexString('#f00'), 1))).toEqual(white)
+    expect(toHexString(lighten(fromHexString('#33a'), 1))).toEqual(white)
+  })
+
+  it('Should return input color when amount is 0.0', () => {
+    expect(toHexString(lighten(fromHexString('#000'), 0))).toEqual('#000000')
+    expect(toHexString(lighten(fromHexString('#fff'), 0))).toEqual('#ffffff')
+    expect(toHexString(lighten(fromHexString('#f00'), 0))).toEqual('#ff0000')
+    expect(toHexString(lighten(fromHexString('#33a'), 0))).toEqual('#3333aa')
+  })
+})
+
+describe('#darken', () => {
+  it('Should darken a input', () => {
+    const gray = '#808080'
+
+    expect(toHexString(darken(fromHexString('#fff'), 0.5))).toEqual(gray)
+    expect(toHexString(darken(fromHexString(gray), 0.5))).toEqual('#404040')
+  })
+
+  it('Should return black when amount is 1.0', () => {
+    const black = '#000000'
+
+    expect(toHexString(darken(fromHexString('#000'), 1))).toEqual(black)
+    expect(toHexString(darken(fromHexString('#fff'), 1))).toEqual(black)
+    expect(toHexString(darken(fromHexString('#f00'), 1))).toEqual(black)
+    expect(toHexString(darken(fromHexString('#33a'), 1))).toEqual(black)
+  })
+
+  it('Should return input color when amount is 0.0', () => {
+    expect(toHexString(darken(fromHexString('#000'), 0))).toEqual('#000000')
+    expect(toHexString(darken(fromHexString('#fff'), 0))).toEqual('#ffffff')
+    expect(toHexString(darken(fromHexString('#f00'), 0))).toEqual('#ff0000')
+    expect(toHexString(darken(fromHexString('#33a'), 0))).toEqual('#3333aa')
   })
 })

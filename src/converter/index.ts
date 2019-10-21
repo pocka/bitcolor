@@ -64,22 +64,22 @@ export const toHexString = (v: Color): string => {
 
 export interface HSLA {
   /**
-   * Hue
+   * Hue (0~360)
    */
   h: number
 
   /**
-   * Saturation
+   * Saturation (0.0~1.0)
    */
   s: number
 
   /**
-   * Lightness
+   * Lightness (0.0~1.0)
    */
   l: number
 
   /**
-   * Alpha
+   * Alpha (0.0~1.0)
    */
   a: number
 }

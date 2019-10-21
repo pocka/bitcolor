@@ -9,6 +9,7 @@ import {
   getG,
   getR
 } from '../shared'
+import { toHslaObject, fromHsla } from '..'
 
 /**
  * Set alpha to the given value.
@@ -55,4 +56,36 @@ export const blend = (a: Color, b: Color, weight: number = 0.5): Color => {
     (Math.round(getB(a) * w + getB(b) * (1 - w)) << B_OFFSET) |
     (Math.round(alphaA * clippedWeight + alphaB * (1 - clippedWeight)) | 0)
   )
+}
+
+/**
+ * Make color lighter.
+ * This operation is equvalent to Sass's scale function with lightness parameter.
+ *
+ * @param color - the color to lighten
+ * @param amount - between 0.0-1.0, where 0.0 is same as input and 1.0 is white (#fff)
+ * @returns the lightened color
+ */
+export const lighten = (color: Color, amount: number): Color => {
+  const hlsa = toHslaObject(color)
+
+  const newL = Math.min(hlsa.l * (1 - amount) + amount, 1)
+
+  return fromHsla(hlsa.h, hlsa.s, newL, hlsa.a)
+}
+
+/**
+ * Make color darker.
+ * This operation is equvalent to Sass's scale function with lightness parameter with negative value.
+ *
+ * @param color - the color to lighten
+ * @param amount - between 0.0-1.0, where 0.0 is same as input and 1.0 is black (#000)
+ * @returns the darkened color
+ */
+export const darken = (color: Color, amount: number): Color => {
+  const hlsa = toHslaObject(color)
+
+  const newL = Math.max(hlsa.l * (1 - amount), 0)
+
+  return fromHsla(hlsa.h, hlsa.s, newL, hlsa.a)
 }
