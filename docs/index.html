@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>My Docs</title>
+    <link rel="stylesheet" href="https://unpkg.com/docute@4/dist/docute.css" />
+  </head>
+  <body>
+    <div id="docute"></div>
+    <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
+    <script>
+      const repo = 'https://github.com/pocka/bitcolor'
+
+      new Docute({
+        target: '#docute',
+        title: 'bitcolor',
+        nav: [
+          {
+            title: 'Guide',
+            link: '/'
+          },
+          {
+            title: 'API',
+            link: '/api/'
+          },
+          {
+            title: 'GitHub',
+            link: repo
+          }
+        ],
+        sidebar: [
+          {
+            title: 'Guide',
+            link: '/'
+          },
+          {
+            title: 'API',
+            children: [
+              {
+                title: 'API overview',
+                link: '/api/'
+              },
+              {
+                title: 'Builder functions',
+                link: '/api/builder'
+              },
+              {
+                title: 'Converter functions',
+                link: '/api/converter'
+              },
+              {
+                title: 'Manipulator functions',
+                link: '/api/manipulator'
+              },
+
+              {
+                title: 'Shared modules',
+                link: '/api/shared'
+              }
+            ]
+          }
+        ],
+        versions: {
+          'v1.0': {
+            link: '/'
+          }
+        },
+        detectSystemDarkTheme: true,
+        darkThemeToggler: true,
+        editLinkBase: repo + '/blob/master/docs'
+      })
+    </script>
+  </body>
+</html>

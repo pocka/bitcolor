@@ -12,7 +12,8 @@
   "scripts": {
     "build": "tsc --declaration --outDir dist",
     "lint": "eslint 'src/**/*.ts'",
-    "test": "jest"
+    "test": "jest",
+    "docs": "http-server ./docs"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
@@ -21,6 +22,7 @@
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
+    "http-server": "^0.11.1",
     "husky": "^3.0.9",
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
