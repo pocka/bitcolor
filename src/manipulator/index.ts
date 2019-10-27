@@ -7,9 +7,12 @@ import {
   getA,
   getB,
   getG,
-  getR
+  getR,
+  getH,
+  getL,
+  getS
 } from '../shared'
-import { toHslaObject, fromHsla } from '..'
+import { toHsl, fromHsla } from '..'
 
 /**
  * Set alpha to the given value.
@@ -67,11 +70,11 @@ export const blend = (a: Color, b: Color, weight: number = 0.5): Color => {
  * @returns the lightened color
  */
 export const lighten = (color: Color, amount: number): Color => {
-  const hlsa = toHslaObject(color)
+  const hsl = toHsl(color)
 
-  const newL = Math.min(hlsa.l * (1 - amount) + amount, 1)
+  const newL = Math.min(getL(hsl) * (1 - amount) + amount, 1)
 
-  return fromHsla(hlsa.h, hlsa.s, newL, hlsa.a)
+  return fromHsla(getH(hsl), getS(hsl), newL, getA(color) / 255)
 }
 
 /**
@@ -83,11 +86,11 @@ export const lighten = (color: Color, amount: number): Color => {
  * @returns the darkened color
  */
 export const darken = (color: Color, amount: number): Color => {
-  const hlsa = toHslaObject(color)
+  const hsl = toHsl(color)
 
-  const newL = Math.max(hlsa.l * (1 - amount), 0)
+  const newL = Math.max(getL(hsl) * (1 - amount), 0)
 
-  return fromHsla(hlsa.h, hlsa.s, newL, hlsa.a)
+  return fromHsla(getH(hsl), getS(hsl), newL, getA(color) / 255)
 }
 
 /**
@@ -98,12 +101,14 @@ export const darken = (color: Color, amount: number): Color => {
  * @returns the rotated color
  */
 export const rotate = (color: Color, degree: number): Color => {
-  const hlsa = toHslaObject(color)
+  const hsl = toHsl(color)
+
+  const h = getH(hsl)
 
   const newH = Math.max(
-    Math.min(((hlsa.h + degree < 0 ? 360 : 0) + hlsa.h + degree) % 360, 360),
+    Math.min(((h + degree < 0 ? 360 : 0) + h + degree) % 360, 360),
     -360
   )
 
-  return fromHsla(newH, hlsa.s, hlsa.l, hlsa.a)
+  return fromHsla(newH, getS(hsl), getL(hsl), getA(color) / 255)
 }

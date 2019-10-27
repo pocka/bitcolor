@@ -1,4 +1,5 @@
 import { Color, getA, getB, getG, getR } from '../shared'
+import * as shared from '../shared'
 
 /**
  * Generate rgba(r,g,b,a) style string.
@@ -85,12 +86,12 @@ export interface HSLA {
 }
 
 /**
- * Generate HSLA object.
+ * Generate 32 bit HSL.
+ * Do not use this directly. Instead, use #toHslaObject
  *
- * @param color - color to convert
- * @returns HLSA object
+ * @private
  */
-export const toHslaObject = (color: Color): HSLA => {
+export const toHsl = (color: Color): Color => {
   const r = getR(color) / 255
   const g = getG(color) / 255
   const b = getB(color) / 255
@@ -115,5 +116,26 @@ export const toHslaObject = (color: Color): HSLA => {
 
   const s = l === 1 || l === 0 ? 0 : c / (1 - Math.abs(2 * l - 1))
 
-  return { h, s, l, a: getA(color) / 255 }
+  return (
+    (Math.round(h) << shared.H_OFFSET) |
+    (Math.round(s * shared.SL_BIT_SIZE) << shared.S_OFFSET) |
+    Math.round(l * shared.SL_BIT_SIZE)
+  )
+}
+
+/**
+ * Generate HSLA object.
+ *
+ * @param color - color to convert
+ * @returns HLSA object
+ */
+export const toHslaObject = (color: Color): HSLA => {
+  const hsl = toHsl(color)
+
+  return {
+    h: shared.getH(hsl),
+    s: shared.getS(hsl),
+    l: shared.getL(hsl),
+    a: getA(color) / 255
+  }
 }
