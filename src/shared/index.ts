@@ -3,18 +3,18 @@ export type Color = number
 // RGBA
 
 // 8 bits * 4 channels = 32 bits
-const RGBA_BIT_SIZE = 8
+const RGBA_BIT_LENGTH = 8
 
-export const R_OFFSET = RGBA_BIT_SIZE * 3
-export const G_OFFSET = RGBA_BIT_SIZE * 2
-export const B_OFFSET = RGBA_BIT_SIZE
+export const R_OFFSET = RGBA_BIT_LENGTH * 3
+export const G_OFFSET = RGBA_BIT_LENGTH * 2
+export const B_OFFSET = RGBA_BIT_LENGTH
 
-const RGBA_MASK_VALUE = (1 << RGBA_BIT_SIZE) - 1
+const RGBA_BIT_SIZE = (1 << RGBA_BIT_LENGTH) - 1
 
-export const R_MASK = RGBA_MASK_VALUE << R_OFFSET
-export const G_MASK = RGBA_MASK_VALUE << G_OFFSET
-export const B_MASK = RGBA_MASK_VALUE << B_OFFSET
-export const A_MASK = RGBA_MASK_VALUE
+export const R_MASK = RGBA_BIT_SIZE << R_OFFSET
+export const G_MASK = RGBA_BIT_SIZE << G_OFFSET
+export const B_MASK = RGBA_BIT_SIZE << B_OFFSET
+export const A_MASK = RGBA_BIT_SIZE
 
 export const getR = (v: number) => (v & R_MASK) >>> R_OFFSET
 export const getG = (v: number) => (v & G_MASK) >>> G_OFFSET
