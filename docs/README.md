@@ -11,7 +11,7 @@
 - Performance
   - (idk it's realy perfomant tho.)
   - Color is represented as number (32 bit integer).
-  - Unless you use HSL related functions, we won't use objects: no GC impact.
+  - No object: memory friendly.
 - Simple
   - Designed for simplicity.
 
