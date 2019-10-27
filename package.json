@@ -13,7 +13,9 @@
     "build": "tsc --declaration --outDir dist",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
-    "docs": "http-server ./docs"
+    "docs": "http-server ./docs",
+    "format": "eslint --fix 'src/**/*.ts'",
+    "fmt": "npm run format"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
