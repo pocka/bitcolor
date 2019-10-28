@@ -8,10 +8,9 @@
   - Tree-shakable.
   - No `new`.
   - Every function is pure.
-- Performance
-  - (idk it's realy perfomant tho.)
+- Performant
   - Color is represented as number (32 bit integer).
-  - No object: memory friendly.
+  - No object: memory friendly, minimum cloning cost.
 - Simple
   - Designed for simplicity.
 
