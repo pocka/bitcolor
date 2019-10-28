@@ -5,12 +5,20 @@
     "color"
   ],
   "description": "Small and simple color manipulation library",
-  "main": "index.js",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "sideEffects": false,
+  "files": [
+    "cjs/**/*",
+    "esm/**/*"
+  ],
   "repository": "git@github.com:pocka/bitcolor.git",
   "author": "Shota Fuji <pockawoooh@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc --declaration --outDir dist",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p tsconfig.build.json --outDir esm",
+    "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir cjs",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
     "docs": "http-server ./docs",
