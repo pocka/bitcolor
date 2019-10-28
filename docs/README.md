@@ -38,3 +38,7 @@ const purple = blend(red, blue)
 
 console.log(toHexString(purple)) // #ff00ff
 ```
+
+## Benchmark result
+
+<stats-table/>

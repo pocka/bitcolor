@@ -15,6 +15,100 @@
     <script>
       const repo = 'https://github.com/pocka/bitcolor'
 
+      Vue.component('StatsTableCell', {
+        props: {
+          result: {
+            type: Object
+          },
+          fastest: {
+            type: Boolean
+          },
+          slowest: {
+            type: Boolean
+          }
+        },
+        template: `
+          <td v-if="!!result">
+            <code>{{result.ops}} ops/s</code><br/>
+            <code>±{{result.margin}}%</code><br/>
+            <span v-if="!fastest">{{result.percentSlower}}% slower</span>
+            <span v-if="fastest">(fastest)</span>
+            <span v-if="slowest">(slowest)</span>
+          </td>
+          <td v-else>N/A</td>
+        `
+      })
+
+      Vue.component('StatsTable', {
+        template: `
+          <div>
+            <p>
+              This benchmark result is measured on the computer which has:
+              <code>{{cpu}} / {{memory}}</code>.
+            </p>
+            <table class="benchmark-stats-table">
+              <v-style>
+                .benchmark-stats-table {
+                  text-align: center;
+                }
+
+                .benchmark-stats-table * {
+                  text-align: inherit !important;
+                }
+              </v-style>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th
+                    v-for="lib in libs"
+                    :key="lib"
+                  >
+                  {{lib}}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="results in data"
+                  :key="results.name"
+                >
+                  <th>{{results.name}}</th>
+                  <stats-table-cell
+                    v-for="lib in libs"
+                    :key="lib"
+                    :result="results.results.find(r => r.name === lib)"
+                    :fastest="results.fastest.name === lib"
+                    :slowest="results.slowest.name === lib"
+                  />
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `,
+        data() {
+          return {
+            libs: [],
+            data: [],
+            cpu: '',
+            memory: ''
+          }
+        },
+        created() {
+          fetch('./stats.json')
+            .then(res => res.json())
+            .then(stats => {
+              this.libs = stats.results
+                .map(result => result.results.map(r => r.name))
+                .reduce((ret, cur) => ret.concat(cur), [])
+                .filter((cur, i, arr) => arr.indexOf(cur) === i)
+
+              this.data = stats.results
+              this.cpu = stats.cpu
+              this.memory = stats.memory
+            })
+        }
+      })
+
       new Docute({
         target: '#docute',
         title: 'bitcolor',

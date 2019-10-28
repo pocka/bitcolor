@@ -3,5 +3,8 @@ esm
 cjs
 yarn.lock
 
+benchmark/stats.json
+docs/stats.json
+
 *.log
 *.tgz

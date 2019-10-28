@@ -22,14 +22,20 @@
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
     "docs": "http-server ./docs",
+    "docs:prepare": "npm run build && npm run benchmark ./benchmark/build-stats.ts && mv ./benchmark/stats.json ./docs/",
     "format": "eslint --fix 'src/**/*.ts'",
     "fmt": "npm run format",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "benchmark": "ts-node -P ./benchmark/tsconfig.json --files"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "@typescript-eslint/parser": "^2.5.0",
+    "benny": "^3.6.13",
+    "chroma-js": "^2.0.6",
+    "color": "^3.1.2",
+    "color-fns": "^0.1.1",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
@@ -38,7 +44,10 @@
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
     "prettier": "^1.18.2",
+    "pretty-bytes": "^5.3.0",
+    "tinycolor2": "^1.4.1",
     "ts-jest": "^24.1.0",
+    "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "husky": {
