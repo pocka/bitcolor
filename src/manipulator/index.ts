@@ -22,7 +22,7 @@ import { toHsl, fromHsla } from '..'
  * @returns the new color with specified alpha
  */
 export const setAlpha = (color: Color, alpha: number): Color =>
-  (color & ~A_MASK) | (Math.min(Math.max(alpha, 0), 1) * 255)
+  (color & ~A_MASK) | Math.round(Math.min(Math.max(alpha, 0), 1) * 255)
 
 /**
  * Blend two colors.
