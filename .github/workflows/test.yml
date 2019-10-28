@@ -12,14 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
-        uses: borales/actions-yarn@v2.0.0
+        uses: nuxt/actions-yarn@master
         with:
           cmd: install
       - name: Run tests
-        uses: borales/actions-yarn@v2.0.0
+        uses: nuxt/actions-yarn@master
         with:
           cmd: test
       - name: Lint files
-        uses: borales/actions-yarn@v2.0.0
+        uses: nuxt/actions-yarn@master
         with:
           cmd: lint
