@@ -4,7 +4,7 @@ import { Color, R_OFFSET, G_OFFSET, B_OFFSET } from '../shared'
  * Build color bits from RGBA values.
  */
 export const fromRgba = (r: number, g: number, b: number, a: number): Color =>
-  (r << R_OFFSET) | (g << G_OFFSET) | (b << B_OFFSET) | (a * 255)
+  (r << R_OFFSET) | (g << G_OFFSET) | (b << B_OFFSET) | Math.round(a * 255)
 
 /**
  * Build color bits from RGB values.
@@ -31,7 +31,10 @@ export const fromHsla = (
   }
 
   return (
-    (f(0) << R_OFFSET) | (f(8) << G_OFFSET) | (f(4) << B_OFFSET) | (a * 255)
+    (f(0) << R_OFFSET) |
+    (f(8) << G_OFFSET) |
+    (f(4) << B_OFFSET) |
+    Math.round(a * 255)
   )
 }
 

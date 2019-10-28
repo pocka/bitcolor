@@ -9,7 +9,7 @@ describe('#fromRgba', () => {
     expect(getR(color)).toEqual(128)
     expect(getG(color)).toEqual(255)
     expect(getB(color)).toEqual(9)
-    expect(getA(color)).toEqual((0.3 * 255) | 0)
+    expect(getA(color)).toEqual(Math.round(0.3 * 255))
   })
 })
 
