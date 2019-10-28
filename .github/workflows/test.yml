@@ -18,12 +18,12 @@ jobs:
       - name: Install dependencies
         uses: nuxt/actions-yarn@master
         with:
-          cmd: install
+          args: install
       - name: Run tests
         uses: nuxt/actions-yarn@master
         with:
-          cmd: test
+          args: test
       - name: Lint files
         uses: nuxt/actions-yarn@master
         with:
-          cmd: lint
+          args: lint

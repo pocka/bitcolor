@@ -14,10 +14,10 @@ jobs:
       - name: Install dependencies
         uses: nuxt/actions-yarn@master
         with:
-          cmd: install
+          args: install
       - name: Publish package
         uses: nuxt/actions-yarn@master
         with:
-          cmd: publish
+          args: publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
