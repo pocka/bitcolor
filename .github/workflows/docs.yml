@@ -16,14 +16,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Read .nvmrc
+        run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
+        id: nvm
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+      - name: Install Yarn
+        run: npm i -g yarn
       - name: Install dependencies
-        uses: nuxt/actions-yarn@master
-        with:
-          args: install
+        run: yarn install
       - name: Run benchmark
-        uses: nuxt/actions-yarn@master
-        with:
-          args: docs:prepare
+        run: yarn docs:prepare
       - name: Deploy to GitHub Pages
         uses: maxheld83/ghpages@v0.2.1
         env:
