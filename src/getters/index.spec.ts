@@ -20,6 +20,6 @@ describe('#getConstrastRatio', () => {
     expect(getContrastRatio(black, white)).toEqual(21)
     expect(getContrastRatio(black, black)).toEqual(1)
     expect(getContrastRatio(red, red)).toEqual(1)
-    expect(getContrastRatio(blue, red)).toEqual(2.14)
+    expect(getContrastRatio(blue, red)).toEqual(2.15)
   })
 })
