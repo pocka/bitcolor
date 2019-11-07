@@ -6,6 +6,7 @@ export const all = async () => {
     import('./blend'),
     import('./darken'),
     import('./lighten'),
+    import('./relative-luminance'),
     import('./set-alpha')
   ]).then(mods => mods.map(mod => mod.default))
 

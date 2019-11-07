@@ -1,6 +1,6 @@
 # Converter functions
 
-Converter functions take a color as input, then return _something_. They are the function which could be represented as `converter(color, ...params) => T`.
+Converter functions take a color as input, then return the color in another format. They are the functions which could be described as `converter(color, ...params) => T`.
 
 ## `toRgbaString`
 
