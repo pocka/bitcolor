@@ -10,7 +10,7 @@ const input = '#f00'
 // Relative luminance of red (21.26%)
 const expected = 0.2126
 
-export default suite('Lighten color', module, [
+export default suite('Get relative luminance', module, [
   {
     name: 'bitcolor',
     expected,
