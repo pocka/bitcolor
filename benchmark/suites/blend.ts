@@ -3,6 +3,7 @@ import { suite } from '../utils'
 import * as bitcolor from '../../cjs'
 import chroma from 'chroma-js'
 import Color from 'color'
+import * as colorFns from 'color-fns'
 import tinycolor from 'tinycolor2'
 
 const input = '#f00'
@@ -38,6 +39,22 @@ export default suite('Blend colors', module, [
       return Color(input)
         .mix(Color(blendColor))
         .hex()
+    }
+  },
+  {
+    name: 'color-fns',
+    // I don't know this is expected
+    expected: '#7f7f00',
+    run() {
+      return colorFns.formatHex(
+        colorFns.rgbToHex(
+          colorFns.mix(
+            colorFns.hexToRgb(input)!,
+            colorFns.hexToRgb(blendColor)!,
+            0.5
+          )
+        )
+      )
     }
   },
   {

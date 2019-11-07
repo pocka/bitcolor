@@ -3,6 +3,7 @@ import { suite } from '../utils'
 import * as bitcolor from '../../cjs'
 import chroma from 'chroma-js'
 import Color from 'color'
+import * as colorFns from 'color-fns'
 import tinycolor from 'tinycolor2'
 
 const input = '#f00'
@@ -30,6 +31,13 @@ export default suite('Get relative luminance', module, [
     expected,
     run() {
       return Color(input).luminosity()
+    }
+  },
+  {
+    name: 'color-fns',
+    expected,
+    run() {
+      return colorFns.relativeLuminance(colorFns.hexToRgb(input)!)
     }
   },
   {
