@@ -7,6 +7,7 @@ export const all = async () => {
     import('./darken'),
     import('./lighten'),
     import('./relative-luminance'),
+    import('./contrast-ratio'),
     import('./set-alpha')
   ]).then(mods => mods.map(mod => mod.default))
 

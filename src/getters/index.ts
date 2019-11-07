@@ -22,3 +22,20 @@ export const getRelativeLuminance = (color: Color): number => {
 
   return Math.round((0.2126 * r + 0.7152 * g + 0.0722 * b) * 10000) / 10000
 }
+
+/**
+ * Returns the constrast ratio of two colors.
+ *
+ * @param a - color1
+ * @param b - color2
+ * @returns the constrast ratio of color1 and color2, 1.0 ~ 21.0 (1:1 ~ 21:1).
+ */
+export const getContrastRatio = (a: Color, b: Color): number => {
+  const la = getRelativeLuminance(a)
+  const lb = getRelativeLuminance(b)
+
+  const l1 = la > lb ? la : lb
+  const l2 = la < lb ? la : lb
+
+  return Math.round(((l1 + 0.05) / (l2 + 0.05)) * 100) / 100
+}
