@@ -104,3 +104,47 @@ function fromHexString(hex: string): Color
 ### Returns
 
 A generated color. The alpha channel is always `1.0`.
+
+## `fromHwb`
+
+Construct a color from [HWB color model](https://en.wikipedia.org/wiki/HWB_color_model).
+
+```ts
+function fromHwb(
+  hue: number,
+  white: number,
+  black: number,
+  alpha?: number
+): Color
+```
+
+### Parameters
+
+| Name  | Default Value | Description                                      |
+| ----- | ------------- | ------------------------------------------------ |
+| hue   |               | Hue. Can be 0 ~ 255.                             |
+| white |               | The amount of white to mix in. Can be 0.0 ~ 1.0. |
+| black |               | The amount of black to mix in. Can be 0.0 ~ 1.0. |
+| alpha | `1.0`         | Alpha channel value. Can be 0.0 ~ 1.0.           |
+
+### Returns
+
+The color in RGB model.
+
+## `fromCssString`
+
+Construct a color from [CSS's `<color>`](https://www.w3.org/TR/css-color-4/), which you usual set to `color` or `background-color` CSS property.
+
+```ts
+function fromCssString(cssString: string): Color
+```
+
+### Parameters
+
+| Name      | Default Value | Description   |
+| --------- | ------------- | ------------- |
+| cssString |               | A CSS string. |
+
+### Returns
+
+The color. If the input string was invalid or not supported, it returns transparent black (`rgba(0 0 0 0)`).

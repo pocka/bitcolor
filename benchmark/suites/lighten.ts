@@ -13,7 +13,7 @@ export default suite('Lighten color', module, [
     expected: '#ff1a1a',
     run() {
       return bitcolor.toHexString(
-        bitcolor.lighten(bitcolor.fromHexString(input), 0.1)
+        bitcolor.lighten(bitcolor.fromCssString(input), 0.1)
       )
     }
   },

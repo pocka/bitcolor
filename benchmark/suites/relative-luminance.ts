@@ -16,7 +16,7 @@ export default suite('Get relative luminance', module, [
     name: 'bitcolor',
     expected,
     run() {
-      return bitcolor.getRelativeLuminance(bitcolor.fromHexString(input))
+      return bitcolor.getRelativeLuminance(bitcolor.fromCssString(input))
     }
   },
   {

@@ -19,8 +19,8 @@ export default suite('Get the contrast ratio of two colors', module, [
     expected,
     run() {
       return bitcolor.getContrastRatio(
-        bitcolor.fromHexString(input),
-        bitcolor.fromHexString(compared)
+        bitcolor.fromCssString(input),
+        bitcolor.fromCssString(compared)
       )
     }
   },

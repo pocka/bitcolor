@@ -17,8 +17,8 @@ export default suite('Blend colors', module, [
     run() {
       return bitcolor.toHexString(
         bitcolor.blend(
-          bitcolor.fromHexString(input),
-          bitcolor.fromHexString(blendColor)
+          bitcolor.fromCssString(input),
+          bitcolor.fromCssString(blendColor)
         )
       )
     }

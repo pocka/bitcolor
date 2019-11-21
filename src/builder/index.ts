@@ -1,4 +1,13 @@
-import { Color, R_OFFSET, G_OFFSET, B_OFFSET } from '../shared'
+import {
+  Color,
+  R_OFFSET,
+  G_OFFSET,
+  B_OFFSET,
+  getR,
+  getG,
+  getB
+} from '../shared'
+import { cssNamedColors } from '../misc'
 
 /**
  * Build color bits from RGBA values.
@@ -36,6 +45,154 @@ export const fromHsla = (
     (f(4) << B_OFFSET) |
     Math.round(a * 255)
   )
+}
+
+/**
+ * Build a color from the HWB(+A) color space value.
+ * https://en.wikipedia.org/wiki/HWB_color_model
+ */
+export const fromHwb = (
+  hue: number,
+  white: number,
+  black: number,
+  alpha: number = 1.0
+): Color => {
+  // The sum of the white and the black is no larger than 1.0.
+  const scale = white + black <= 1 ? 1 : 1 / (white + black)
+
+  // Clamped values.
+  const w2 = white * scale
+  const b2 = black * scale
+
+  const p = fromHsla(hue, 1, 0.5, alpha)
+
+  const l = 1 - w2 - b2
+
+  const r = (getR(p) / 255) * l + w2
+  const g = (getG(p) / 255) * l + w2
+  const b = (getB(p) / 255) * l + w2
+
+  return (
+    (Math.round(r * 255) << R_OFFSET) |
+    (Math.round(g * 255) << G_OFFSET) |
+    (Math.round(b * 255) << B_OFFSET) |
+    Math.round(alpha * 255)
+  )
+}
+
+const rgbNotationPattern = /^rgba?\(/
+const hslNotationPattern = /^hsla?\(/
+const hwbNotationPattern = /^hwb\(/
+
+const rgbExtractor = /\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)(\s+([\d.]+))?\s*\)/
+const rgbpExtractor = /\(\s*([\d.]+)%\s+([\d.]+)%\s+([\d.]+)%(\s+([\d.]+))?\s*\)/
+
+const hslHwbExtractor = /\(\s*([\d.]+)(deg)?\s+([\d.]+)%\s+([\d.]+)%(\s+([\d.]+))?\s*\)/
+
+/**
+ * Parse CSS color string.
+ * https://www.w3.org/TR/css-color-4/#resolving-color-values
+ *
+ * If the input is invalid or could not be parsed, returns
+ * transparent black (rgba(0 0 0 0)).
+ *
+ * This function does not accept color() function and context
+ * specific functions/colors, listed below:
+ * - color()         ... too complex!
+ * - device-cmyk()   ... depends on a device
+ * - <system-colors> ... depends on a environment
+ *                       https://www.w3.org/TR/css-color-4/#css-system-colors
+ * - currentcolor    ... only usable with Document(HTML)+CSS
+ * - lab(), lch(), gray()
+ *                   ... not implemented yet
+ */
+export const fromCssString = (color: string): Color => {
+  if (color === 'transparent') {
+    // transparent black
+    return 0
+  }
+
+  if (color.charAt(0) === '#') {
+    return color.length === 4 || color.length === 7
+      ? fromHexString(color)
+      : fromHexaString(color)
+  }
+
+  if (rgbNotationPattern.test(color)) {
+    // Convert alternative syntax to main one.
+    // This isn't strict conversion since we need to check
+    // whether every value is separeted by comma. But for
+    // performance reasons, it ignore even if the input mixes
+    // comma delimiters and space delimiters.
+    const n = color.replace(/,/g, ' ')
+
+    const rgb = n.match(rgbExtractor)
+
+    if (rgb) {
+      return fromRgba(
+        parseFloat(rgb[1]),
+        parseFloat(rgb[2]),
+        parseFloat(rgb[3]),
+        rgb[5] ? parseFloat(rgb[5]) : 1
+      )
+    }
+
+    const rgbp = n.match(rgbpExtractor)
+
+    if (rgbp) {
+      return fromRgba(
+        255 * (parseFloat(rgbp[1]) / 100),
+        255 * (parseFloat(rgbp[2]) / 100),
+        255 * (parseFloat(rgbp[3]) / 100),
+        rgbp[5] ? parseFloat(rgbp[5]) : 1
+      )
+    }
+
+    return 0
+  }
+
+  if (hslNotationPattern.test(color)) {
+    // Convert alternative syntax to main one.
+    const n = color.replace(/,/g, ' ')
+
+    const hsl = n.match(hslHwbExtractor)
+
+    if (!hsl) {
+      return 0
+    }
+
+    return fromHsla(
+      parseFloat(hsl[1]),
+      parseFloat(hsl[3]) / 100,
+      parseFloat(hsl[4]) / 100,
+      hsl[6] ? parseFloat(hsl[6]) : 1
+    )
+  }
+
+  if (hwbNotationPattern.test(color)) {
+    const hwb = color.match(hslHwbExtractor)
+
+    if (!hwb) {
+      return 0
+    }
+
+    return fromHwb(
+      parseFloat(hwb[1]),
+      parseFloat(hwb[3]) / 100,
+      parseFloat(hwb[4]) / 100,
+      hwb[6] ? parseFloat(hwb[6]) : 1
+    )
+  }
+
+  const namedColor = cssNamedColors[color.toLowerCase()]
+
+  if (namedColor) {
+    return namedColor
+  }
+
+  // TODO: lab(), lch() and gray() functional notations
+
+  return 0
 }
 
 /**

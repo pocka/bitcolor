@@ -14,7 +14,7 @@ export default suite('Hex to RGB conversion', module, [
     name: 'bitcolor',
     expected: 'rgb(255,255,255)',
     run() {
-      return bitcolor.toRgbString(bitcolor.fromHexString(input))
+      return bitcolor.toRgbString(bitcolor.fromCssString(input))
     }
   },
   {

@@ -13,7 +13,7 @@ export default suite('Darken input', module, [
     expected: '#e60000',
     run() {
       return bitcolor.toHexString(
-        bitcolor.darken(bitcolor.fromHexString(input), 0.1)
+        bitcolor.darken(bitcolor.fromCssString(input), 0.1)
       )
     }
   },

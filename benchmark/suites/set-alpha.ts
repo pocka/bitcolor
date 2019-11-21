@@ -15,7 +15,7 @@ export default suite('Set alpha channel value', module, [
     expected,
     run() {
       return bitcolor.toHexaString(
-        bitcolor.setAlpha(bitcolor.fromHexString(input), opacity)
+        bitcolor.setAlpha(bitcolor.fromCssString(input), opacity)
       )
     }
   },
