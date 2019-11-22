@@ -137,4 +137,18 @@ describe('#fromCssString', () => {
     expect(toHexaString(fromCssString('black'))).toEqual('#000000ff')
     expect(toHexaString(fromCssString('cyan'))).toEqual('#00ffffff')
   })
+
+  it('Should handle lab function', () => {
+    expect(toHexaString(fromCssString('lab(53.5% 0 0)'))).toEqual('#808080ff')
+  })
+
+  it('Should handle lch function', () => {
+    expect(toHexaString(fromCssString('lch(53.5% 0 0deg)'))).toEqual(
+      '#808080ff'
+    )
+  })
+
+  it('Should handle gray function', () => {
+    expect(toHexaString(fromCssString('gray(53.5)'))).toEqual('#808080ff')
+  })
 })

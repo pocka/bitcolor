@@ -80,14 +80,114 @@ export const fromHwb = (
   )
 }
 
+// D50 to D65 transform matrix
+const mD50ToD65 = [
+  [0.9555766, -0.0230393, 0.0631636],
+  [-0.0282895, 1.0099416, 0.0210077],
+  [0.0122982, -0.020483, 1.3299098]
+] as const
+
+// XYZ(D65) to Linear RGB transform matrix
+const mXyzToLinRgb = [
+  [3.2404542, -1.5371385, -0.4985314],
+  [-0.969266, 1.8760108, 0.041556],
+  [0.0556434, -0.2040259, 1.0572252]
+] as const
+
+const linearRgbToSrgb = (v: number) =>
+  v > 0.0031308 ? 1.055 * Math.pow(v, 1 / 2.4) - 0.055 : 12.92 * v
+
+const clamp = (v: number) => Math.max(Math.min(v, 255), 0)
+
+/**
+ * (EXPERIMENTAL!)
+ * Build a color from Lab color space.
+ * https://www.w3.org/TR/css-color-4/#color-conversion-code
+ * @param l - lightness
+ * @param a - the value of the a axis
+ * @param b - the value of the b axis
+ * @param alpha - alpha channel
+ */
+export const fromLab = (
+  l: number,
+  a: number,
+  b: number,
+  alpha: number = 1.0
+): Color => {
+  const k = 24389 / 27 // 29^3/3^3
+  const e = 216 / 24389 // 6^3/29^3
+
+  const f1 = (l + 16) / 116
+  const f0 = a / 500 + f1
+  const f2 = f1 - b / 200
+
+  const f0p3 = Math.pow(f0, 3)
+  const f2p3 = Math.pow(f2, 3)
+
+  const x = (f0p3 > e ? f0p3 : (116 * f0 - 16) / k) * 0.96422
+  const y = (l > k * e ? Math.pow(f1, 3) : l / k) * 1.0
+  const z = (f2p3 > e ? f2p3 : (116 * f2 - 16) / k) * 0.82521
+
+  const xd65 = mD50ToD65[0][0] * x + mD50ToD65[0][1] * y + mD50ToD65[0][2] * z
+  const yd65 = mD50ToD65[1][0] * x + mD50ToD65[1][1] * y + mD50ToD65[1][2] * z
+  const zd65 = mD50ToD65[2][0] * x + mD50ToD65[2][1] * y + mD50ToD65[2][2] * z
+
+  const lr =
+    mXyzToLinRgb[0][0] * xd65 +
+    mXyzToLinRgb[0][1] * yd65 +
+    mXyzToLinRgb[0][2] * zd65
+  const lg =
+    mXyzToLinRgb[1][0] * xd65 +
+    mXyzToLinRgb[1][1] * yd65 +
+    mXyzToLinRgb[1][2] * zd65
+  const lb =
+    mXyzToLinRgb[2][0] * xd65 +
+    mXyzToLinRgb[2][1] * yd65 +
+    mXyzToLinRgb[2][2] * zd65
+
+  return (
+    (Math.round(clamp(linearRgbToSrgb(lr) * 255)) << R_OFFSET) |
+    (Math.round(clamp(linearRgbToSrgb(lg) * 255)) << G_OFFSET) |
+    (Math.round(clamp(linearRgbToSrgb(lb) * 255)) << B_OFFSET) |
+    Math.round(alpha * 255)
+  )
+}
+
+const degreeToRadian = (degree: number) => (degree * Math.PI) / 180
+
+/**
+ * (EXPERIMENTAL!)
+ * https://www.w3.org/TR/css-color-4/#lab-colors
+ * @param l - lightness
+ * @param c - chroma
+ * @param h - hue (0 ~ 360, deg)
+ */
+export const fromLch = (
+  l: number,
+  c: number,
+  h: number,
+  alpha: number = 1.0
+) => {
+  const hr = degreeToRadian(h)
+
+  return fromLab(l, c * Math.cos(hr), c * Math.sin(hr), alpha)
+}
+
 const rgbNotationPattern = /^rgba?\(/
 const hslNotationPattern = /^hsla?\(/
 const hwbNotationPattern = /^hwb\(/
+const labNotationPattern = /^lab\(/
+const lchNotationPattern = /^lch\(/
+const grayNotationPattern = /^gray\(/
 
 const rgbExtractor = /\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)(\s+([\d.]+))?\s*\)/
 const rgbpExtractor = /\(\s*([\d.]+)%\s+([\d.]+)%\s+([\d.]+)%(\s+([\d.]+))?\s*\)/
 
 const hslHwbExtractor = /\(\s*([\d.]+)(deg)?\s+([\d.]+)%\s+([\d.]+)%(\s+([\d.]+))?\s*\)/
+
+const labExtractor = /\(\s*([\d.]+)%\s+([\d.]+)\s+([\d.]+)(\s+([\d.]+))?\s*\)/
+const lchExtractor = /\(\s*([\d.]+)%\s+([\d.]+)\s+([\d.]+)(deg)?(\s+([\d.]+))?\s*\)/
+const grayExtractor = /\(\s*([\d.]+)(\s+([\d.]+))?\s*\)/
 
 /**
  * Parse CSS color string.
@@ -103,8 +203,6 @@ const hslHwbExtractor = /\(\s*([\d.]+)(deg)?\s+([\d.]+)%\s+([\d.]+)%(\s+([\d.]+)
  * - <system-colors> ... depends on a environment
  *                       https://www.w3.org/TR/css-color-4/#css-system-colors
  * - currentcolor    ... only usable with Document(HTML)+CSS
- * - lab(), lch(), gray()
- *                   ... not implemented yet
  */
 export const fromCssString = (color: string): Color => {
   if (color === 'transparent') {
@@ -190,7 +288,45 @@ export const fromCssString = (color: string): Color => {
     return namedColor
   }
 
-  // TODO: lab(), lch() and gray() functional notations
+  if (labNotationPattern.test(color)) {
+    const lab = color.match(labExtractor)
+
+    if (!lab) {
+      return 0
+    }
+
+    return fromLab(
+      parseFloat(lab[1]),
+      parseFloat(lab[2]),
+      parseFloat(lab[3]),
+      lab[5] ? parseFloat(lab[5]) : 1
+    )
+  }
+
+  if (lchNotationPattern.test(color)) {
+    const lch = color.match(lchExtractor)
+
+    if (!lch) {
+      return 0
+    }
+
+    return fromLch(
+      parseFloat(lch[1]),
+      parseFloat(lch[2]),
+      parseFloat(lch[3]),
+      lch[6] ? parseFloat(lch[6]) : 1
+    )
+  }
+
+  if (grayNotationPattern.test(color)) {
+    const gray = color.match(grayExtractor)
+
+    if (!gray) {
+      return 0
+    }
+
+    return fromLab(parseFloat(gray[1]), 0, 0, gray[3] ? parseFloat(gray[3]) : 1)
+  }
 
   return 0
 }
