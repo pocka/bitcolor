@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2019-11-22
+
+### Added
+
+- Add `fromHwb` function.
+- Add `fromCssString` function.
+
+## [0.3.0] - 2019-11-07
+
+### Added
+
+- Add `getContrastRatio` function.
+
+## [0.2.0] - 2019-11-07
+
+### Added
+
+- Add `getRelativeLuminance` function.
+
 ## [0.1.1] - 2019-10-28
 
 ### Fixed
